@@ -10,7 +10,7 @@ const MAX_HARVESTERS = 5;
 const MAX_BUILDERS = 3;
 const MAX_UPGRADERS = 4;
 const MAX_TRANSPORTERS = 5;
-const MAX_MEDICS = 3;
+const MAX_MEDICS = 1;
 // ...existing code...
 const SPAWN_NAME = 'Camelot';
 
