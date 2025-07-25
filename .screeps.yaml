@@ -1,0 +1,14 @@
+servers:
+  main:
+    host: screeps.newbieland.net
+    port: 21025
+    secure: false
+    path: /
+    username: Alevard
+    password: D!gger2159022501
+
+main:
+  ptr: false
+  branch: default
+  server: main
+  src: .
