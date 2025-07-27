@@ -15,7 +15,7 @@ const roleHarvester = {
             creep.drop(RESOURCE_ENERGY);
         }
         // Always harvest if not full
-        if (creep.store.getFreeCapacity() > 0) {
+        if (!creep.memory.harvesting && creep.store.getFreeCapacity() > 0) {
             // Only target sources not at or adjacent to the room edge (avoid pathing bugs)
             const sources = creep.room.find(FIND_SOURCES, {
                 filter: s => s.pos.x > 1 && s.pos.x < 48 && s.pos.y > 1 && s.pos.y < 48

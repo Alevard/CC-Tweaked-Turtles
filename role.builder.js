@@ -34,6 +34,26 @@ const roleBuilder = {
                 if (creep.build(site) === ERR_NOT_IN_RANGE) {
                     creep.moveTo(site, {visualizePathStyle: {stroke: '#ffffff'}, maxRooms: 1});
                 }
+                return;
+            }
+            // If no construction sites, repair nearest damaged road
+            const damagedRoads = creep.room.find(FIND_STRUCTURES, {
+                filter: s => s.structureType === STRUCTURE_ROAD && s.hits < s.hitsMax
+            });
+            if (damagedRoads.length > 0) {
+                const nearest = creep.pos.findClosestByRange(damagedRoads);
+                if (nearest) {
+                    if (creep.repair(nearest) === ERR_NOT_IN_RANGE) {
+                        creep.moveTo(nearest, {visualizePathStyle: {stroke: '#8888ff'}, maxRooms: 1});
+                    }
+                    return;
+                }
+            }
+            // If nothing to do, move to Idle flag if it exists
+            const idleFlag = Game.flags['Idle'];
+            if (idleFlag) {
+                creep.moveTo(idleFlag, {visualizePathStyle: {stroke: '#00ff00'}, maxRooms: 1});
+                creep.say('🪧', 5);
             }
         } else {
             // Try to withdraw from the nearest container first
