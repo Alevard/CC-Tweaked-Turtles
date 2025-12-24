@@ -5,10 +5,10 @@
 local CONFIG = {
     TURTLE_ID = os.getComputerLabel() or "Turtle" .. os.getComputerID(),  -- Uses label if set, otherwise computer ID
     CHEST_SIDE = "back",
-    MIN_FUEL_PERCENT = 5,  -- Return home if fuel drops below 5%
+    MIN_FUEL_PERCENT = 2,  -- Return home if fuel drops below 2%
     MAX_FUEL = 100000,  -- Maximum fuel capacity (turtles can hold ~100k fuel)
-    FUEL_RESERVE = 5000,  -- Keep 5% fuel (5,000) in reserve
-    MIN_FUEL_TO_MINE = 500,  -- Minimum fuel needed to continue mining
+    FUEL_RESERVE = 2000,  -- Keep 2% fuel (2,000) in reserve
+    MIN_FUEL_TO_MINE = 200,  -- Minimum fuel needed to continue mining
     INVENTORY_FULL_PERCENT = 90,  -- Return when inventory is 90% full
     TUNNEL_LENGTH = 250,  -- Length of each horizontal tunnel
     MAX_DEPTH = 500,  -- Maximum depth to mine (500 blocks down from start)
@@ -102,11 +102,10 @@ local function refuel()
             local item = turtle.getItemDetail(slot)
             if item and (item.name == "minecraft:coal" or item.name == "minecraft:charcoal") then
                 turtle.select(slot)
-                local needed = math.ceil((CONFIG.FUEL_RESERVE - currentFuel) / 80)
-                turtle.refuel(math.min(needed, item.count))
+                turtle.refuel(1)  -- Just refuel 1 coal at a time as needed
                 currentFuel = turtle.getFuelLevel()
                 
-                if currentFuel >= CONFIG.FUEL_RESERVE then
+                if currentFuel >= CONFIG.MIN_FUEL_TO_MINE then
                     break
                 end
             end
@@ -238,27 +237,15 @@ local function depositCoal()
     turnAround()
     
     local coalDeposited = 0
-    local fuelNeeded = CONFIG.FUEL_RESERVE - turtle.getFuelLevel()
-    local coalToKeep = math.ceil(fuelNeeded / 80)
     
     for slot = 1, 16 do
         local item = turtle.getItemDetail(slot)
         if item and (item.name == "minecraft:coal" or item.name == "minecraft:charcoal") then
             turtle.select(slot)
-            
-            if coalToKeep > 0 then
-                local keepAmount = math.min(coalToKeep, item.count)
-                local depositAmount = item.count - keepAmount
-                
-                if depositAmount > 0 then
-                    turtle.drop(depositAmount)
-                    coalDeposited = coalDeposited + depositAmount
-                end
-                
-                coalToKeep = coalToKeep - keepAmount
-            else
-                turtle.drop()
-                coalDeposited = coalDeposited + item.count
+            -- Keep 5 coal for fuel, deposit the rest
+            if item.count > 5 then
+                turtle.drop(item.count - 5)
+                coalDeposited = coalDeposited + (item.count - 5)
             end
         end
     end
@@ -353,25 +340,12 @@ local function mineForward()
             broadcastStatus("waiting")
             waitWhilePaused()
             
-            -- Return to current mining position
-            print("Returning to mining position...")
-            navigateTo(tunnelStartX, position.y, tunnelStartZ)
-        end
+        -- Check for remote commands
+        checkForCommands()
+        waitWhilePaused()
         
         -- Check if inventory full
         if isInventoryFull() then
-            print("Inventory full, returning to base")
-            local currentX, currentY, currentZ = position.x, position.y, position.z
-            returnToBase()
-            depositCoal()
-            
-            -- Return to where we left off
-            print("Returning to mining position...")
-            navigateTo(currentX, currentY, currentZ)
-        end
-        
-        -- Refuel if needed
-        refuel()
         
         -- Mine coal around current position
         mineIfCoal("up")
