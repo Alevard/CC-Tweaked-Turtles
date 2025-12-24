@@ -23,6 +23,10 @@ local NORTH, EAST, SOUTH, WEST = 0, 1, 2, 3
 -- Remote control state
 local paused = false
 
+-- Forward declarations
+local returnToBase
+local depositCoal
+
 -- Initialize modem for remote control
 local function initModem()
     for _, side in ipairs({"top", "bottom", "left", "right", "front", "back"}) do
@@ -242,14 +246,14 @@ local function navigateTo(targetX, targetY, targetZ)
 end
 
 -- Return to base
-local function returnToBase()
+returnToBase = function()
     print("Returning to base...")
     broadcastStatus("returning")
     navigateTo(0, 0, 0)
 end
 
 -- Deposit coal in chest
-local function depositCoal()
+depositCoal = function()
     print("Depositing coal...")
     turnAround()
     
