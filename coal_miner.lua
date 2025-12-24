@@ -87,6 +87,18 @@ function getCoalCount()
     return total
 end
 
+-- Drop non-coal items
+local function dropNonCoal()
+    for slot = 1, 16 do
+        local item = turtle.getItemDetail(slot)
+        if item and item.name ~= "minecraft:coal" and item.name ~= "minecraft:charcoal" then
+            turtle.select(slot)
+            turtle.dropDown()
+        end
+    end
+    turtle.select(1)
+end
+
 -- Check if inventory is full
 local function isInventoryFull()
     local coal = getCoalCount()
@@ -350,6 +362,9 @@ local function mineForward()
         
         -- Refuel if needed
         refuel()
+        
+        -- Drop any non-coal items
+        dropNonCoal()
         
         -- Mine coal around current position
         mineIfCoal("up")
