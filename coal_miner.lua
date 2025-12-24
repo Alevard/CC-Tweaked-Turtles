@@ -310,7 +310,7 @@ end
 local function mineForward()
     print("Starting layered mining operation")
     print("Tunnel length: " .. CONFIG.TUNNEL_LENGTH .. " blocks")
-    print("Max depth: " .. CONFIG.TUNNEL_LENGTH .. " blocks")
+    print("Max depth: " .. CONFIG.MAX_DEPTH .. " blocks")
     print("Press Ctrl+T to stop")
     
     local blocksMined = 0
@@ -332,20 +332,20 @@ local function mineForward()
         checkForCommands()
         waitWhilePaused()
         
-        -- Check fuel level
-        if checkFuelLevel() then
-            returnToBase()
-            depositCoal()
-            paused = true
-            broadcastStatus("waiting")
-            waitWhilePaused()
-            
-        -- Check for remote commands
-        checkForCommands()
-        waitWhilePaused()
-        
         -- Check if inventory full
         if isInventoryFull() then
+            print("Inventory full, returning to base")
+            local currentX, currentY, currentZ = position.x, position.y, position.z
+            returnToBase()
+            depositCoal()
+            
+            -- Return to where we left off
+            print("Returning to mining position...")
+            navigateTo(currentX, currentY, currentZ)
+        end
+        
+        -- Refuel if needed
+        refuel()
         
         -- Mine coal around current position
         mineIfCoal("up")
