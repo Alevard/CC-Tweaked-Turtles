@@ -58,11 +58,15 @@ local function checkForCommands()
     if message then
         if message.command == "return" and (message.target == CONFIG.TURTLE_ID or message.target == "all") then
             print("Received return command")
+            returnToBase()
+            depositCoal()
             paused = true
+            broadcastStatus("paused")
             return true
         elseif message.command == "resume" and (message.target == CONFIG.TURTLE_ID or message.target == "all") then
             print("Received resume command")
             paused = false
+            broadcastStatus("mining")
             return true
         elseif message.command == "status" then
             broadcastStatus(paused and "paused" or "mining")
