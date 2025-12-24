@@ -160,6 +160,7 @@ local function forward()
         sleep(0.5)
     end
     updatePosition("forward")
+    checkForCommands()  -- Check for commands after every move
     return true
 end
 
@@ -380,6 +381,10 @@ local function mineForward()
         end
         
         forward()
+        
+        -- Check for commands more frequently
+        checkForCommands()
+        waitWhilePaused()
         
         -- Check if we've reached the end of the tunnel
         local distanceFromStart = math.abs(position.x - tunnelStartX) + math.abs(position.z - tunnelStartZ)
