@@ -5,9 +5,9 @@
 local CONFIG = {
     TURTLE_ID = os.getComputerLabel() or "Turtle" .. os.getComputerID(),  -- Uses label if set, otherwise computer ID
     CHEST_SIDE = "back",
-    MIN_FUEL_PERCENT = 10,  -- Return home if fuel drops below 10%
+    MIN_FUEL_PERCENT = 5,  -- Return home if fuel drops below 5%
     MAX_FUEL = 100000,  -- Maximum fuel capacity (turtles can hold ~100k fuel)
-    FUEL_RESERVE = 10000,  -- Keep 10% fuel (10,000) in reserve
+    FUEL_RESERVE = 5000,  -- Keep 5% fuel (5,000) in reserve
     MIN_FUEL_TO_MINE = 500,  -- Minimum fuel needed to continue mining
     INVENTORY_FULL_PERCENT = 90,  -- Return when inventory is 90% full
     TUNNEL_LENGTH = 250,  -- Length of each horizontal tunnel
