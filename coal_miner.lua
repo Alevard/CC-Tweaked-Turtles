@@ -3,7 +3,7 @@
 -- Simplified for parallel branch mining operation
 
 local CONFIG = {
-    TURTLE_ID = "coal_miner_1",  -- Change this for each turtle
+    TURTLE_ID = os.getComputerLabel() or "Turtle" .. os.getComputerID(),  -- Uses label if set, otherwise computer ID
     CHEST_SIDE = "back",
     MIN_FUEL_PERCENT = 10,  -- Return home if fuel drops below 10%
     MAX_FUEL = 100000,  -- Maximum fuel capacity (turtles can hold ~100k fuel)

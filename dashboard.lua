@@ -60,8 +60,8 @@ local function displayDashboard()
         if os.clock() - data.lastSeen > STALE_TIMEOUT then
             turtles[turtle.id] = nil
         else
-            -- Shorten turtle name: "coal_miner_1" -> "T1"
-            local shortName = data.name:gsub("coal_miner_", "T")
+            -- Shorten turtle name: "Turtle5" -> "T5"
+            local shortName = data.name:gsub("Turtle", "T")
             
             -- Calculate percentages
             local fuelPercent = math.floor((data.fuel / 100000) * 100)  -- Updated to 100k max fuel
